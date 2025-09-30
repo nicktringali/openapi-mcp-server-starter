@@ -1,0 +1,27 @@
+[project]
+name = "openapi-mcp-server-starter"
+version = "0.1.0"
+description = "Minimal stdio-only starter for awslabs.openapi-mcp-server against Petstore."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["venv", ".venv", "node_modules", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = '^(venv|.venv|build|dist|node_modules)/'
+strict_optional = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+testpaths = ["tests"]
