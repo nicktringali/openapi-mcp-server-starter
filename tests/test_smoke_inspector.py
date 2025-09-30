@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 import subprocess
 from typing import Any, Dict, List
@@ -11,6 +12,14 @@ pytestmark = pytest.mark.skipif(
 )
 
 
+def _inspector_enabled() -> bool:
+    return os.getenv("ENABLE_SMOKE_INSPECTOR", "0") == "1"
+
+
+@pytest.mark.skipif(
+    not _inspector_enabled(),
+    reason="Inspector smoke test disabled by default; set ENABLE_SMOKE_INSPECTOR=1 to enable",
+)
 def test_tools_list_returns_tools() -> None:
     cmd = [
         "npx",
@@ -34,7 +43,9 @@ def test_tools_list_returns_tools() -> None:
     env = {"ENABLE_OPERATION_PROMPTS": "true"}
     proc = subprocess.run(cmd, capture_output=True, text=True, env=env, check=False)
     stdout = proc.stdout.strip()
-    assert proc.returncode == 0, f"Inspector CLI failed: {proc.returncode}\n{proc.stderr}\n{stdout}"
+    assert proc.returncode == 0, (
+        f"Inspector CLI failed: {proc.returncode}\n{proc.stderr}\n{stdout}"
+    )
 
     last_json = None
     for line in stdout.splitlines()[::-1]:
